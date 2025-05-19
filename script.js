@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateCooksList();
         updateWaitersList();
 
+        // Привязка событий
         document.getElementById('registerButton').addEventListener('click', register);
         document.getElementById('voteWaiterStar').addEventListener('click', () => vote('waiter', 'star'));
         document.getElementById('voteWaiterPig').addEventListener('click', () => vote('waiter', 'pig'));
@@ -47,7 +48,7 @@ async function updateUserCache(user) {
     allUsers = allUsers.filter(u => u.id !== user.id);
     allUsers.push(user);
     try {
-        const response = await fetch(https://script.google.com/macros/s/AKfycbwjnuGtyxaNMFW0Qnz4LbLrESVz3VtKGu6YMRODeIU-sl2rvbFJD5EIhhsZf1Mr8iR7IA/exec, {
+        const response = await fetch(WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'updateUsers', users: allUsers })
@@ -56,6 +57,7 @@ async function updateUserCache(user) {
         if (result.error) {
             throw new Error(result.error);
         }
+        console.log("Пользователи успешно обновлены:", result);
     } catch (error) {
         console.error("Ошибка при обновлении пользователей:", error);
         throw error;
@@ -64,12 +66,13 @@ async function updateUserCache(user) {
 
 async function loadUsersForAutocomplete() {
     try {
-        const response = await fetch(`${https://script.google.com/macros/s/AKfycbwjnuGtyxaNMFW0Qnz4LbLrESVz3VtKGu6YMRODeIU-sl2rvbFJD5EIhhsZf1Mr8iR7IA/exec}?action=getUsers`);
+        const response = await fetch(`${WEB_APP_URL}?action=getUsers`);
         const data = await response.json();
         if (data.error) {
             throw new Error(data.error);
         }
         allUsers = data.users || [];
+        console.log("Пользователи загружены:", allUsers);
     } catch (error) {
         console.error("Ошибка при загрузке пользователей:", error);
         throw error;
@@ -78,13 +81,14 @@ async function loadUsersForAutocomplete() {
 
 async function loadVotingPeriod() {
     try {
-        const response = await fetch(`${https://script.google.com/macros/s/AKfycbwjnuGtyxaNMFW0Qnz4LbLrESVz3VtKGu6YMRODeIU-sl2rvbFJD5EIhhsZf1Mr8iR7IA/exec}?action=getVotingPeriod`);
+        const response = await fetch(`${WEB_APP_URL}?action=getVotingPeriod`);
         const data = await response.json();
         if (data.error) {
             throw new Error(data.error);
         }
         votingPeriod = data.period;
         displayVotingPeriod();
+        console.log("Период голосования загружен:", votingPeriod);
     } catch (error) {
         console.error("Ошибка при загрузке периода голосования:", error);
         throw error;
