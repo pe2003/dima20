@@ -48,13 +48,13 @@ async function updateUserCache(user) {
 }
 
 async function loadUsersForAutocomplete() {
-    const response = await fetch('YOUR_WEB_APP_URL?action=getUsers');
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwDE17Wx5_JRvewxqLEoj4N_vH_LyyPRgvW-2N6GQrDzy-wNNTC3UD0mQuqhNVh1gHx3Q/exec?action=getUsers');
     const data = await response.json();
     allUsers = data.users || [];
 }
 
 async function loadVotingPeriod() {
-    const response = await fetch('YOUR_WEB_APP_URL?action=getVotingPeriod');
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwDE17Wx5_JRvewxqLEoj4N_vH_LyyPRgvW-2N6GQrDzy-wNNTC3UD0mQuqhNVh1gHx3Q/exec?action=getVotingPeriod');
     const data = await response.json();
     votingPeriod = data.period;
     displayVotingPeriod();
