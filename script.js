@@ -40,7 +40,7 @@ async function updateUserCache(user) {
     allUsers = allUsers.filter(u => u.id !== user.id);
     allUsers.push(user);
     // Отправка обновленного списка пользователей в Google Sheets
-    await fetch('https://script.google.com/macros/s/AKfycbyHA5gXvkOMlNjgdIZGNdntND-7i0UXIY7N-ou7yvyMo-o3mIu8CRe2aBPynfMLe6pbDQ/exec', {
+    await fetch('https://script.google.com/macros/s/AKfycbwDE17Wx5_JRvewxqLEoj4N_vH_LyyPRgvW-2N6GQrDzy-wNNTC3UD0mQuqhNVh1gHx3Q/exec', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ action: 'updateUsers', users: allUsers })
