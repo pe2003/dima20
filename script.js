@@ -1,3 +1,5 @@
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwDE17Wx5_JRvewxqLEoj4N_vH_LyyPRgvW-2N6GQrDzy-wNNTC3UD0mQuqhNVh1gHx3Q/exec';
+
 console.log("script.js загружен");
 
 let currentUser = null;
@@ -11,25 +13,30 @@ let waiterPigVoted = false;
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM полностью загружен");
 
-    await loadUsersForAutocomplete();
-    await loadVotingPeriod();
-    checkExistingUser();
-    updateCooksList();
-    updateWaitersList();
+    try {
+        await loadUsersForAutocomplete();
+        await loadVotingPeriod();
+        checkExistingUser();
+        updateCooksList();
+        updateWaitersList();
 
-    document.getElementById('registerButton').addEventListener('click', register);
-    document.getElementById('voteWaiterStar').addEventListener('click', () => vote('waiter', 'star'));
-    document.getElementById('voteWaiterPig').addEventListener('click', () => vote('waiter', 'pig'));
-    document.getElementById('voteCookStar').addEventListener('click', () => vote('cook', 'star'));
-    document.getElementById('voteCookPig').addEventListener('click', () => vote('cook', 'pig'));
-    document.getElementById('adminButton').addEventListener('click', showAdminPage);
-    document.getElementById('adminLoginButton').addEventListener('click', adminLogin);
-    document.getElementById('backToMainButton').addEventListener('click', backToMainPage);
-    document.getElementById('setVotingPeriodButton').addEventListener('click', setVotingPeriod);
-    document.getElementById('clearDatabaseButton').addEventListener('click', showClearDatabaseModal);
-    document.getElementById('confirmClearDatabaseButton').addEventListener('click', clearDatabase);
-    document.getElementById('cancelClearDatabaseButton').addEventListener('click', closeClearDatabaseModal);
-    document.getElementById('refreshDataButton').addEventListener('click', refreshAllData);
+        document.getElementById('registerButton').addEventListener('click', register);
+        document.getElementById('voteWaiterStar').addEventListener('click', () => vote('waiter', 'star'));
+        document.getElementById('voteWaiterPig').addEventListener('click', () => vote('waiter', 'pig'));
+        document.getElementById('voteCookStar').addEventListener('click', () => vote('cook', 'star'));
+        document.getElementById('voteCookPig').addEventListener('click', () => vote('cook', 'pig'));
+        document.getElementById('adminButton').addEventListener('click', showAdminPage);
+        document.getElementById('adminLoginButton').addEventListener('click', adminLogin);
+        document.getElementById('backToMainButton').addEventListener('click', backToMainPage);
+        document.getElementById('setVotingPeriodButton').addEventListener('click', setVotingPeriod);
+        document.getElementById('clearDatabaseButton').addEventListener('click', showClearDatabaseModal);
+        document.getElementById('confirmClearDatabaseButton').addEventListener('click', clearDatabase);
+        document.getElementById('cancelClearDatabaseButton').addEventListener('click', closeClearDatabaseModal);
+        document.getElementById('refreshDataButton').addEventListener('click', refreshAllData);
+    } catch (error) {
+        console.error("Ошибка при инициализации:", error);
+        alert("Не удалось загрузить данные. Проверьте консоль для деталей.");
+    }
 });
 
 function normalizeString(str) {
@@ -39,25 +46,49 @@ function normalizeString(str) {
 async function updateUserCache(user) {
     allUsers = allUsers.filter(u => u.id !== user.id);
     allUsers.push(user);
-    // Отправка обновленного списка пользователей в Google Sheets
-    await fetch('https://script.google.com/macros/s/AKfycbwDE17Wx5_JRvewxqLEoj4N_vH_LyyPRgvW-2N6GQrDzy-wNNTC3UD0mQuqhNVh1gHx3Q/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'updateUsers', users: allUsers })
-    });
+    try {
+        const response = await fetch(https://script.google.com/macros/s/AKfycbwjnuGtyxaNMFW0Qnz4LbLrESVz3VtKGu6YMRODeIU-sl2rvbFJD5EIhhsZf1Mr8iR7IA/exec, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'updateUsers', users: allUsers })
+        });
+        const result = await response.json();
+        if (result.error) {
+            throw new Error(result.error);
+        }
+    } catch (error) {
+        console.error("Ошибка при обновлении пользователей:", error);
+        throw error;
+    }
 }
 
 async function loadUsersForAutocomplete() {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbwDE17Wx5_JRvewxqLEoj4N_vH_LyyPRgvW-2N6GQrDzy-wNNTC3UD0mQuqhNVh1gHx3Q/exec?action=getUsers');
-    const data = await response.json();
-    allUsers = data.users || [];
+    try {
+        const response = await fetch(`${https://script.google.com/macros/s/AKfycbwjnuGtyxaNMFW0Qnz4LbLrESVz3VtKGu6YMRODeIU-sl2rvbFJD5EIhhsZf1Mr8iR7IA/exec}?action=getUsers`);
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        allUsers = data.users || [];
+    } catch (error) {
+        console.error("Ошибка при загрузке пользователей:", error);
+        throw error;
+    }
 }
 
 async function loadVotingPeriod() {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbwDE17Wx5_JRvewxqLEoj4N_vH_LyyPRgvW-2N6GQrDzy-wNNTC3UD0mQuqhNVh1gHx3Q/exec?action=getVotingPeriod');
-    const data = await response.json();
-    votingPeriod = data.period;
-    displayVotingPeriod();
+    try {
+        const response = await fetch(`${https://script.google.com/macros/s/AKfycbwjnuGtyxaNMFW0Qnz4LbLrESVz3VtKGu6YMRODeIU-sl2rvbFJD5EIhhsZf1Mr8iR7IA/exec}?action=getVotingPeriod`);
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        votingPeriod = data.period;
+        displayVotingPeriod();
+    } catch (error) {
+        console.error("Ошибка при загрузке периода голосования:", error);
+        throw error;
+    }
 }
 
 function displayVotingPeriod() {
@@ -121,7 +152,6 @@ function updateAutocomplete(role, voteType) {
 }
 
 function checkExistingUser() {
-    // Здесь можно добавить загрузку currentUser из Google Sheets, если нужно
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
         currentUser = JSON.parse(storedUser);
@@ -294,11 +324,16 @@ async function vote(targetRole, voteType) {
         };
         cachedVotes.push({ vote: newVote, user: targetUser });
         localStorage.setItem(`votes_${currentUser.id}`, JSON.stringify(cachedVotes));
-        await fetch('YOUR_WEB_APP_URL', {
+
+        const response = await fetch(WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'addVote', vote: newVote })
         });
+        const result = await response.json();
+        if (result.error) {
+            throw new Error(result.error);
+        }
 
         currentUser[voteKey] = true;
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
@@ -411,8 +446,7 @@ function adminLogin() {
     const password = document.getElementById('adminPassword').value;
     const errorDiv = document.getElementById('adminError');
 
-    // Простая проверка админа (замените на безопасный механизм в продакшене)
-    const admins = [{ login: 'admin', password: 'admin123' }]; // Хардкод для примера
+    const admins = [{ login: 'admin', password: 'admin123' }];
     const admin = admins.find(a => a.login === login && a.password === password);
     if (admin) {
         errorDiv.textContent = '';
@@ -467,11 +501,15 @@ async function setVotingPeriod() {
             start: startDateTime.toISOString(),
             end: endDateTime.toISOString()
         };
-        await fetch('YOUR_WEB_APP_URL', {
+        const response = await fetch(WEB_APP_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ action: 'setVotingPeriod', period: votingPeriod })
         });
+        const result = await response.json();
+        if (result.error) {
+            throw new Error(result.error);
+        }
 
         document.getElementById('votingPeriodMessage').textContent = 'Период голосования успешно установлен!';
         document.getElementById('votingPeriodMessage').style.color = '#2ecc71';
@@ -497,11 +535,18 @@ async function updateRegistrationStats() {
 }
 
 async function updateAdminResults() {
-    const response = await fetch('YOUR_WEB_APP_URL?action=getVotes');
-    const data = await response.json();
-    const usersWithVotes = data.usersWithVotes || [];
-
-    displayResults(usersWithVotes);
+    try {
+        const response = await fetch(`${WEB_APP_URL}?action=getVotes`);
+        const data = await response.json();
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        const usersWithVotes = data.usersWithVotes || [];
+        displayResults(usersWithVotes);
+    } catch (error) {
+        console.error("Ошибка при обновлении результатов:", error);
+        alert("Не удалось загрузить результаты голосования: " + error.message);
+    }
 }
 
 function displayResults(usersWithVotes) {
@@ -524,7 +569,7 @@ function displayResults(usersWithVotes) {
         }
         top5.forEach((user, index) => {
             const div = document.createElement('div');
-            div.textContent = `${index + 1}. ${user.surname} ${user.name}: ${type === 'stars' ? '★' : '🐷'}${user[type]}`;
+            div.textContent = `${index + 1}. ${user.surname} ${user.name}: ${type === 'stars' ? '★' : '🐷'} ${user[type]}`;
             container.appendChild(div);
         });
     };
@@ -562,35 +607,49 @@ async function clearDatabase() {
         return;
     }
 
-    await fetch('YOUR_WEB_APP_URL', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'clearDatabase' })
-    });
+    try {
+        const response = await fetch(WEB_APP_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'clearDatabase' })
+        });
+        const result = await response.json();
+        if (result.error) {
+            throw new Error(result.error);
+        }
 
-    allUsers = [];
-    currentUser = null;
-    votingPeriod = null;
-    cookStarVoted = false;
-    cookPigVoted = false;
-    waiterStarVoted = false;
-    waiterPigVoted = false;
+        allUsers = [];
+        currentUser = null;
+        votingPeriod = null;
+        cookStarVoted = false;
+        cookPigVoted = false;
+        waiterStarVoted = false;
+        waiterPigVoted = false;
 
-    localStorage.clear();
-    closeClearDatabaseModal();
-    updateAdminResults();
-    updateRegistrationStats();
-    alert('База данных успешно очищена!');
+        localStorage.clear();
+        closeClearDatabaseModal();
+        updateAdminResults();
+        updateRegistrationStats();
+        alert('База данных успешно очищена!');
+    } catch (error) {
+        console.error("Ошибка при очистке базы данных:", error);
+        errorDiv.textContent = 'Произошла ошибка: ' + error.message;
+    }
 }
 
 async function refreshAllData() {
-    await loadUsersForAutocomplete();
-    await loadVotingPeriod();
-    updateCooksList();
-    updateWaitersList();
-    checkExistingUser();
-    updateMyVotes();
-    updateAdminResults();
-    updateRegistrationStats();
-    alert('Данные успешно обновлены!');
+    try {
+        await loadUsersForAutocomplete();
+        await loadVotingPeriod();
+        updateCooksList();
+        updateWaitersList();
+        checkExistingUser();
+        updateMyVotes();
+        updateAdminResults();
+        updateRegistrationStats();
+        alert('Данные успешно обновлены!');
+    } catch (error) {
+        console.error("Ошибка при обновлении данных:", error);
+        alert("Произошла ошибка при обновлении данных: " + error.message);
+    }
 }
